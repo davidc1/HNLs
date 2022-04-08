@@ -29,15 +29,16 @@ def _LEPTON_MASS(alpha):
     if (alpha==3): return _m_muon
     return 0
 
-def _L(yl2): # ??? is this log10
-    N = 1-4*yl2
+def _L(yl): # ??? is this log10
+    N = 1-4*(yl**2)
     if (N < 0): return -1
     N = sqrt(N)
-    B = ( 1 - 3*yl2 - (1-yl2) * N ) / ( yl2 * (1 + N ) )
+    #B = ( 1 - 3*yl2 - (1-yl2) * N ) / ( yl2 * (1 + N ) )
+    B = (1 + N) / (2 * yl)
     #print ("N = %g"%N)
     #print ("B = %g"%B)
     if (B <= 0): return -1
-    return log( B )
+    return - 4 * log( B )
 
 
 # channel decaying to \nu + \nu + \nu [A.1]
@@ -67,21 +68,22 @@ def _Gamma_pilepton(HNL_MASS,U,alpha):
 def _Gamma_llnu1(HNL_MASS,U,alpha,beta):
     if (alpha == beta): return 0
     if (HNL_MASS < (_LEPTON_MASS(alpha) + _LEPTON_MASS(beta)) ): return 0
-    #xl = max(_LEPTON_MASS(beta),_LEPTON_MASS(alpha)) / HNL_MASS
-    xl = _m_elec / HNL_MASS
-    return ( _Gf**2 * HNL_MASS**5 * U**2 / (192 * pi**3) ) * (1 - 8 * xl**2 + 8 * xl**6 - xl**8 - 12 * xl**4 * log(xl**4) )
+    xl = max(_LEPTON_MASS(beta),_LEPTON_MASS(alpha)) / HNL_MASS
+    #xl = _m_elec / HNL_MASS
+    return ( _Gf**2 * HNL_MASS**5 * U**2 / (192 * pi**3) ) * (1 - 8 * xl**2 + 8 * xl**6 - xl**8 - 12 * xl**4 * log(xl**2) )
 
 # channel decaying to l^{-}_{\beta} + l^{+}_{\beta} + \nu_{\alpha} [A.6]
 def _Gamma_llnu2(HNL_MASS,U,alpha,beta):
     if (HNL_MASS < 2 * _LEPTON_MASS(beta)): return 0
-    yl2 = (_LEPTON_MASS(beta) / HNL_MASS)**2
+    yl  = (_LEPTON_MASS(beta) / HNL_MASS)
+    yl2 = yl**2
     #print ("yl2 = %g"%yl2)
     A = 1-4*yl2
     #print ("A = %g"%A)
     if (A <= 0): return 0
     A = sqrt(A)
     delta = _DIRAC(alpha,beta)
-    L = _L(yl2)
+    L = _L(yl)
     #print ("L = %g"%L)
     if (L == -1): return 0
     TERM1 = ( _Gf**2 * HNL_MASS**5 * U**2 / (192 * pi**3) )
