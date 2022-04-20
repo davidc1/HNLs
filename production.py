@@ -3,14 +3,14 @@ import numpy as np
 # load BNB neutrino flux [from MicroBooNE paper XXX]
 
 def MicroBooNE_FLUX():
-    flux_data = np.loadtxt('MicroBooNE_Flux_Pions_Kaons.csv',skiprows=2,delimiter=',')
+    flux_data = np.loadtxt('MicroBooNE_Flux_Updated.csv',skiprows=2,delimiter=',')
 
     # flux in units of neutrinos / POT / GeV / cm2
     kaon_flux = []
     pion_flux = []
     for flux_row in flux_data:
-        kaon_f = flux_row[1]
-        pion_f = flux_row[3]
+        kaon_f = flux_row[3] + flux_row[5]
+        pion_f = flux_row[1]
         kaon_flux.append(kaon_f)
         pion_flux.append(pion_f)
 
